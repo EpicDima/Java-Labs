@@ -1,0 +1,5 @@
+Candy 1, 100, 10
+Candy 2, 244, 51
+Candy 3, 50, 80
+Candy 4, 181, 5
+Candy 5, 90, 90
