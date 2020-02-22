@@ -1,0 +1,2 @@
+10-02-2020 08:16:56 ERROR storage.SimpleFilePaymentSystem:42 - banking.Client; local class incompatible: stream classdesc serialVersionUID = 2125179687872194673, local class serialVersionUID = -4379672584187271431
+10-02-2020 08:45:11 ERROR storage.SimpleFilePaymentSystem:42 - 

@@ -31,13 +31,13 @@ public class SimpleFilePaymentSystem extends AbstractPaymentSystem {
         File file = new File(filename);
         if (file.exists()) {
             try {
-                ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file));
-                int size = stream.readInt();
-                clients = new ArrayList<>(size);
-                for (int i = 0; i < size; i++) {
-                    clients.add((Client) stream.readObject());
+                try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
+                    int size = stream.readInt();
+                    clients = new ArrayList<>(size);
+                    for (int i = 0; i < size; i++) {
+                        clients.add((Client) stream.readObject());
+                    }
                 }
-                stream.close();
             } catch (IOException | ClassNotFoundException e) {
                 logger.error(e.getMessage());
             }
@@ -57,12 +57,12 @@ public class SimpleFilePaymentSystem extends AbstractPaymentSystem {
             }
         }
         try {
-            ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file));
-            stream.writeInt(clients.size());
-            for (Client client : clients) {
-                stream.writeObject(client);
+            try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file))) {
+                stream.writeInt(clients.size());
+                for (Client client : clients) {
+                    stream.writeObject(client);
+                }
             }
-            stream.close();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
