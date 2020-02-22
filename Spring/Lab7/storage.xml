@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<clients>
+    <client id="0" login="Dima" password="qwerty">
+        <creditCards>
+            <creditCard id="0" account="18233" balance="0" freezed="true"/>
+            <creditCard id="1" account="60408" balance="1000" freezed="false"/>
+            <creditCard id="2" account="18020" balance="11" freezed="false"/>
+        </creditCards>
+    </client>
+    <client id="1" login="Dima2" password="123456">
+        <creditCards>
+            <creditCard id="3" account="53222" balance="0" freezed="false"/>
+            <creditCard id="4" account="21721" balance="199" freezed="false"/>
+        </creditCards>
+    </client>
+    <client id="2" login="Yt" password="qwe123">
+        <creditCards/>
+    </client>
+</clients>
