@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Servlets:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Servlets_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Servlets/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Servlets" />
+          <element id="module-output" name="Model" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="com.google.code.gson:gson:2.8.6" />
+          <element id="library" level="project" name="org.slf4j:slf4j-log4j12:1.7.12" />
+          <element id="library" level="project" name="mysql:mysql-connector-java:8.0.17" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

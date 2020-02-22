@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Регистрация абитуриента</title>
+</head>
+<body>
+    <label id="error-label"></label>
+    <br/>
+
+    <form>
+        <label for="faculty-id"></label>
+        <select id="faculty-id" onchange="setDisciplines()" required>
+            <option value="0" selected>Факультет не выбран</option>
+        </select>
+
+        <br/>
+        <br/>
+        <label for="login-input"></label>
+        <input id="login-input" type="text" placeholder="Логин" required/>
+        <br/>
+        <br/>
+        <label for="surname-input"></label>
+        <input id="surname-input" type="text" placeholder="Фамилия" required/>
+        <br/>
+        <br/>
+        <label for="name-input"></label>
+        <input id="name-input" type="text" placeholder="Имя" required/>
+        <br/>
+        <br/>
+        <label for="middlename-input"></label>
+        <input id="middlename-input" type="text" placeholder="Отчество" required/>
+        <br/>
+        <br/>
+        <label for="certificate-input"></label>
+        <input id="certificate-input" type="number" placeholder="Аттестат" min="0" max="100" required/>
+        <br/>
+        <br/>
+        <label id="first-discipline-label" for="first-discipline-input"></label>
+        <input id="first-discipline-input" type="number" min="0" max="100" required/>
+        <br/>
+        <br/>
+        <label id="second-discipline-label" for="second-discipline-input"></label>
+        <input id="second-discipline-input" type="number" min="0" max="100" required/>
+        <br/>
+        <br/>
+        <label id="third-discipline-label" for="third-discipline-input"></label>
+        <input id="third-discipline-input" type="number" min="0" max="100" required/>
+        <br/>
+        <br/>
+        <br/>
+        <label for="password-input"></label>
+        <input id="password-input" type="password" placeholder="Пароль" required/>
+        <br/>
+        <br/>
+        <label for="repeat-password-input"></label>
+        <input id="repeat-password-input" type="password" placeholder="Повторите пароль" required/>
+
+    </form>
+    <br/>
+    <br/>
+    <button onclick="registration()">Регистрация</button>
+
+    <br/>
+    <a href="authorization.html">Вход</a>
+
+
+<script>
+
+    var activeFaculties;
+
+    function getFaculties() {
+        let request = new XMLHttpRequest();
+        request.responseType = "json";
+        request.open("GET", "/api/faculties", true);
+        request.onload = function() {
+            if (request.status === 200) {
+                if (request.response) {
+                    activeFaculties = request.response;
+                    listItems = "<option value='0' selected>Факультет не выбран</option>";
+                    for (let i = 0; i < activeFaculties.length; i++) {
+                        listItems += `<option value=${activeFaculties[i].id}>${activeFaculties[i].name}</option>`;
+                    }
+                    document.getElementById("faculty-id").innerHTML = listItems;
+                }
+            }
+        };
+        request.send();
+    }
+
+    function setDisciplines() {
+        let facultySelect = document.getElementById("faculty-id");
+        let firstDisciplineLabel = document.getElementById("first-discipline-label");
+        let secondDisciplineLabel = document.getElementById("second-discipline-label");
+        let thirdDisciplineLabel = document.getElementById("third-discipline-label");
+        let errorLabel = document.getElementById("error-label");
+
+        if (facultySelect.value !== "0") {
+            let faculty = activeFaculties.find(element => {
+                return element.id === parseInt(facultySelect.value);
+            });
+            firstDisciplineLabel.innerHTML = faculty.firstDiscipline;
+            secondDisciplineLabel.innerHTML = faculty.secondDiscipline;
+            thirdDisciplineLabel.innerHTML = faculty.thirdDiscipline;
+            errorLabel.innerHTML = "";
+        } else {
+            firstDisciplineLabel.innerHTML = "";
+            secondDisciplineLabel.innerHTML = "";
+            thirdDisciplineLabel.innerHTML = "";
+            errorLabel.innerHTML = "Укажите факультет из списка";
+        }
+    }
+
+    function registration() {
+        let errorLabel = document.getElementById("error-label");
+
+        let facultyInput = document.getElementById("faculty-id");
+        let loginInput = document.getElementById("login-input");
+        let surnameInput = document.getElementById("surname-input");
+        let nameInput = document.getElementById("name-input");
+        let middlenameInput = document.getElementById("middlename-input");
+        let certificateInput = document.getElementById("certificate-input");
+        let firstDisciplineInput = document.getElementById("first-discipline-input");
+        let secondDisciplineInput = document.getElementById("second-discipline-input");
+        let thirdDisciplineInput = document.getElementById("third-discipline-input");
+        let passwordInput = document.getElementById("password-input");
+        let repeatPasswordInput = document.getElementById("repeat-password-input");
+
+        if (facultyInput.value === "0") {
+            errorLabel.innerHTML = "Выберите факультет";
+            return;
+        }
+        if (loginInput.validity.valid && surnameInput.validity.valid && nameInput.validity.valid
+            && middlenameInput.validity.valid && certificateInput.validity.valid && firstDisciplineInput.validity.valid
+            && secondDisciplineInput.validity.valid && thirdDisciplineInput.validity.valid && passwordInput.validity.valid
+            && passwordInput.value === repeatPasswordInput.value) {
+
+            errorLabel.innerHTML = "";
+
+            let request = new XMLHttpRequest();
+            request.responseType = "json";
+            request.open("POST", "/api/entrants", true);
+            request.onload = function() {
+                if (request.status === 200) {
+                    if (request.response) {
+                        if (request.response.error) {
+                            errorLabel.innerHTML = request.response.error;
+                            return;
+                        }
+                    }
+                    if (request.responseURL) {
+                        window.location.href = request.responseURL;
+                    }
+                }
+            };
+            request.send(JSON.stringify({"login": loginInput.value, "password": passwordInput.value,
+                "surname": surnameInput.value, "name": nameInput.value, "middleName": middlenameInput.value,
+                "certificate": certificateInput.value, "firstDiscipline": firstDisciplineInput.value,
+                "secondDiscipline": secondDisciplineInput.value, "thirdDiscipline": thirdDisciplineInput.value,
+                "facultyId": parseInt(facultyInput.value)}));
+        } else {
+            errorLabel.innerHTML = "Правильно заполните поля ввода!";
+        }
+    }
+
+    getFaculties();
+    setDisciplines();
+
+</script>
+</body>
+</html>

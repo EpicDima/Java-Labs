@@ -1,0 +1,4 @@
+03-12-2019 09:15:40 ERROR util.ConfigurationManager:25 - src\config.properties (Системе не удается найти указанный путь)
+03-12-2019 09:16:30 WARN  storage.mysql.dao.MySqlAdminDAO:46 - Duplicate entry 'admin' for key 'UniqueUserLogin'
+03-12-2019 09:16:30 WARN  storage.mysql.dao.MySqlFacultyDAO:48 - Duplicate entry 'Факультет автоматизированных и ин' for key 'UniqueFacultyName'
+03-12-2019 09:16:30 WARN  storage.mysql.dao.MySqlEntrantDAO:57 - Duplicate entry 'Dima' for key 'UniqueUserLogin'
