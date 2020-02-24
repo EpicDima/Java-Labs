@@ -1,17 +1,26 @@
 package storage;
 
 import storage.base.PaymentSystem;
+import storage.xml.DomXmlPaymentSystem;
+import storage.xml.SaxXmlPaymentSystem;
+import storage.xml.StaxXmlPaymentSystem;
 
 public class PaymentSystemFactory {
 
     public enum PaymentSystemType {
-        XML
+        SAX_XML, DOM_XML, STAX_XML
     }
 
     public static PaymentSystem getPaymentSystem(PaymentSystemType type) {
-        if (type == PaymentSystemType.XML) {
-            return new XmlPaymentSystem();
+        switch (type) {
+            case SAX_XML:
+                return new SaxXmlPaymentSystem();
+            case DOM_XML:
+                return new DomXmlPaymentSystem();
+            case STAX_XML:
+                return new StaxXmlPaymentSystem();
+            default:
+                return null;
         }
-        return null;
     }
 }

@@ -1,4 +1,4 @@
-package storage;
+package storage.xml;
 
 import banking.Client;
 import banking.CreditCard;
@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import storage.base.AbstractPaymentSystem;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -20,16 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class XmlPaymentSystem extends AbstractPaymentSystem {
-
-    private static final String CLIENT_LIST_NAME = "clients";
-    private static final String CLIENT_NAME = "client";
-    private static final String CREDIT_CARD_LIST_NAME = "creditCards";
-    private static final String CREDIT_CARD_NAME = "creditCard";
-
-    private static final Logger logger = LoggerFactory.getLogger(XmlPaymentSystem.class);
-
-    private static final String FILENAME = "storage.xml";
+public class SaxXmlPaymentSystem extends XmlPaymentSystem {
+    private static final Logger logger = LoggerFactory.getLogger(SaxXmlPaymentSystem.class);
 
     @Override
     protected void loadClients() {
@@ -50,19 +41,19 @@ public class XmlPaymentSystem extends AbstractPaymentSystem {
         try {
             writer = xmlOutputFactory.createXMLStreamWriter(new FileOutputStream(FILENAME));
             writer.writeStartDocument();
-            writer.writeStartElement(CLIENT_LIST_NAME);
+            writer.writeStartElement(CLIENT_LIST_ELEMENT);
             for (Client client : clients) {
-                writer.writeStartElement(CLIENT_NAME);
-                writer.writeAttribute("id", String.valueOf(client.getId()));
-                writer.writeAttribute("login", client.getLogin());
-                writer.writeAttribute("password", client.getPassword());
-                writer.writeStartElement(CREDIT_CARD_LIST_NAME);
+                writer.writeStartElement(CLIENT_ELEMENT);
+                writer.writeAttribute(ID_ATTRIBUTE, String.valueOf(client.getId()));
+                writer.writeAttribute(LOGIN_ATTRIBUTE, client.getLogin());
+                writer.writeAttribute(PASSWORD_ATTRIBUTE, client.getPassword());
+                writer.writeStartElement(CREDIT_CARD_LIST_ELEMENT);
                 for (CreditCard creditCard : client.getCreditCards()) {
-                    writer.writeStartElement(CREDIT_CARD_NAME);
-                    writer.writeAttribute("id", String.valueOf(creditCard.getId()));
-                    writer.writeAttribute("account", String.valueOf(creditCard.getAccount()));
-                    writer.writeAttribute("balance", String.valueOf(creditCard.getBalance()));
-                    writer.writeAttribute("freezed", String.valueOf(creditCard.isFreezed()));
+                    writer.writeStartElement(CREDIT_CARD_ELEMENT);
+                    writer.writeAttribute(ID_ATTRIBUTE, String.valueOf(creditCard.getId()));
+                    writer.writeAttribute(ACCOUNT_ATTRIBUTE, String.valueOf(creditCard.getAccount()));
+                    writer.writeAttribute(BALANCE_ATTRIBUTE, String.valueOf(creditCard.getBalance()));
+                    writer.writeAttribute(FREEZED_ATTRIBUTE, String.valueOf(creditCard.isFreezed()));
                     writer.writeEndElement();
                 }
                 writer.writeEndElement();
@@ -91,11 +82,11 @@ public class XmlPaymentSystem extends AbstractPaymentSystem {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) {
             switch (qName) {
-                case CLIENT_NAME:
+                case CLIENT_ELEMENT:
                     try {
-                        int id = Integer.parseInt(attributes.getValue("id"));
-                        String login = attributes.getValue("login");
-                        String password = attributes.getValue("password");
+                        int id = Integer.parseInt(attributes.getValue(ID_ATTRIBUTE));
+                        String login = attributes.getValue(LOGIN_ATTRIBUTE);
+                        String password = attributes.getValue(PASSWORD_ATTRIBUTE);
                         if (login == null || password == null) {
                             return;
                         }
@@ -104,12 +95,12 @@ public class XmlPaymentSystem extends AbstractPaymentSystem {
                         logger.warn(e.getMessage());
                     }
                     break;
-                case CREDIT_CARD_NAME:
+                case CREDIT_CARD_ELEMENT:
                     try {
-                        int id = Integer.parseInt(attributes.getValue("id"));
-                        long account = Long.parseLong(attributes.getValue("account"));
-                        long balance = Long.parseLong(attributes.getValue("balance"));
-                        boolean freezed = Boolean.parseBoolean(attributes.getValue("freezed"));
+                        int id = Integer.parseInt(attributes.getValue(ID_ATTRIBUTE));
+                        long account = Long.parseLong(attributes.getValue(ACCOUNT_ATTRIBUTE));
+                        long balance = Long.parseLong(attributes.getValue(BALANCE_ATTRIBUTE));
+                        boolean freezed = Boolean.parseBoolean(attributes.getValue(FREEZED_ATTRIBUTE));
                         if (client != null) {
                             client.addCreditCard(new CreditCard(id, account, balance, freezed));
                         }
@@ -122,7 +113,7 @@ public class XmlPaymentSystem extends AbstractPaymentSystem {
 
         @Override
         public void endElement(String uri, String localName, String qName) {
-            if (CLIENT_NAME.equals(qName)) {
+            if (CLIENT_ELEMENT.equals(qName)) {
                 if (client != null) {
                     clients.add(client);
                     client = null;

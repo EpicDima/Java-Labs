@@ -28,7 +28,7 @@ public class Menu {
     private Client currentClient = null;
 
     public Menu() {
-        paymentSystem = PaymentSystemFactory.getPaymentSystem(PaymentSystemFactory.PaymentSystemType.XML);
+        paymentSystem = PaymentSystemFactory.getPaymentSystem(PaymentSystemFactory.PaymentSystemType.STAX_XML);
     }
 
     public void openMenu() {
