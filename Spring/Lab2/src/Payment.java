@@ -64,7 +64,14 @@ public class Payment {
     }
 
 
-    public static class Product {
+    public interface ImmutableProduct {
+        int getId();
+        String getName();
+        String getDescription();
+    }
+
+
+    public static class Product implements ImmutableProduct {
 
         private static int productCounter = 1;
 

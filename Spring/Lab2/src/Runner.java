@@ -18,5 +18,10 @@ public class Runner {
                 payment4.toString(), payment5.toString());
 
         System.out.println(payments);
+
+        System.out.println("\n\n");
+        Payment.ImmutableProduct product6 = new Payment.Product("Стол компьютерный", "Материал: красное дерево");
+        System.out.println(String.format("Id: %d; Name: %s; Description: %s",
+                product6.getId(), product6.getName(), product6.getDescription()));
     }
 }
